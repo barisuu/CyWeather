@@ -1,7 +1,6 @@
-package com.example.cyweather;
+package com.example.cyweather.repository;
 
 import com.example.cyweather.domain.WeatherData;
-import com.example.cyweather.repository.WeatherDataRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @DataJpaTest
-public class WeatherDataRepositoryTests {
+public class WeatherDataRepositoryUnitTests {
 
     @Autowired
     private WeatherDataRepository weatherDataRepository;

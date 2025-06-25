@@ -35,7 +35,7 @@ public class WeatherServiceTests {
         when(weatherApiClient.fetchCurrentWeather(city)).thenReturn(mockData);
         when(weatherDataRepository.save(mockData)).thenReturn(mockData);
 
-        WeatherData result = weatherService.fetchAndSaveWeather(city);
+        WeatherData result = weatherService.fetchAndSaveCurrentWeather(city);
 
 
         assertThat(result.getCity()).isEqualTo("Nicosia");
