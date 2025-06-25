@@ -1,5 +1,6 @@
 package com.example.cyweather.api;
 
+import com.example.cyweather.domain.City;
 import com.example.cyweather.domain.WeatherData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ public class WeatherApiHttpClientIntegrationTest {
 
     @Test
     void fetchCurrentWeatherReturnsWeatherData(){
-        WeatherData data = client.fetchCurrentWeather("Nicosia");
+        //TODO: Make sure test uses actual database not mock city.
+        City city = new City(540341L,"Nicosia", "Nicosia", "Cyprus",35.17,33.37);
+        WeatherData data = client.fetchCurrentWeather(city);
 
         assertNotNull(data);
         assertEquals("Nicosia", data.getCity());

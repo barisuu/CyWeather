@@ -1,6 +1,7 @@
 package com.example.cyweather.service;
 
 import com.example.cyweather.api.WeatherApiClient;
+import com.example.cyweather.domain.City;
 import com.example.cyweather.domain.WeatherData;
 import com.example.cyweather.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,12 @@ public class WeatherService {
     }
 
     //Used only for manual user refresh. For all other purposes use getCurrentWeather
-    public WeatherData fetchAndSaveCurrentWeather(String city){
+    public WeatherData fetchAndSaveCurrentWeather(City city){
         WeatherData data = weatherApiClient.fetchCurrentWeather(city);
         return weatherDataRepository.save(data);
     }
 
-    public WeatherData getCurrentWeather(String city){
+    public WeatherData getCurrentWeather(City city){
         Optional<WeatherData> latest = weatherDataRepository.findTopByCityOrderByTimeDesc(city);
 
         if(latest.isPresent() && isDataFresh(latest.get())){
@@ -38,7 +39,7 @@ public class WeatherService {
         return weatherDataRepository.save(freshData);
     }
 
-    public List<WeatherData> getHistoricalWeather(String city, Integer daysInPast){
+    public List<WeatherData> getHistoricalWeather(City city, Integer daysInPast){
         LocalDate dtDate = LocalDate.now().minusDays(daysInPast);
         List<WeatherData> historicalWeather = weatherApiClient.fetchHistoricalWeather(city,dtDate);
         return historicalWeather;

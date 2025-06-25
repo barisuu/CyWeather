@@ -1,7 +1,7 @@
 package com.example.cyweather.api;
 
-import com.example.cyweather.DTO.ForecastDay;
-import com.example.cyweather.DTO.ForecastResponse;
+import com.example.cyweather.DTO.*;
+import com.example.cyweather.domain.City;
 import com.example.cyweather.domain.WeatherData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class WeatherApiHttpClient implements WeatherApiClient {
@@ -29,27 +28,27 @@ public class WeatherApiHttpClient implements WeatherApiClient {
     }
 
     @Override
-    public WeatherData fetchCurrentWeather(String city) {
+    public WeatherData fetchCurrentWeather(City city) {
         String url = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("api.weatherapi.com")
                 .path("/v1/current.json")
                 .queryParam("key",apiKey)
-                .queryParam("q",city)
+                .queryParam("q","id:"+city.getId())
                 .build()
                 .toUriString();
 
-        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+        CurrentResponse response = restTemplate.getForObject(url, CurrentResponse.class);
 
         if(response == null){
             throw new RuntimeException("Invalid response from WeatherAPI");
         }
 
-        Map<String,Object> current = (Map<String,Object>) response.get("current");
-        Double temp=(Double) current.get("temp_c");
+        Current current = response.getCurrent();
+        Double temp= current.getTemp_c();
 
-        Map<String, Object> condition = (Map<String, Object>) current.get("condition");
-        String weatherConditionText = (String) condition.get("text");
+        Condition condition = current.getCondition();
+        String weatherConditionText = condition.getText();
 
         //Using localdatetime.now instead of the API's last updated as lastupdated time occasionally displays the wrong
         //time.
@@ -57,14 +56,15 @@ public class WeatherApiHttpClient implements WeatherApiClient {
     }
 
     @Override
-    public List<WeatherData> fetchHistoricalWeather(String city, LocalDate dt){
+    public List<WeatherData> fetchHistoricalWeather(City city, LocalDate dt){
         String url = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("api.weatherapi.com")
                 .path("/v1/history.json")
                 .queryParam("key",apiKey)
-                .queryParam("q",city)
+                .queryParam("q","id:"+city.getId())
                 .queryParam("dt",dt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .queryParam("end_dt",LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build()
                 .toUriString();
 
@@ -73,14 +73,12 @@ public class WeatherApiHttpClient implements WeatherApiClient {
         if(response==null){
             throw new RuntimeException("Invalid response from API for historical data");
         }
-
         List<WeatherData> pastDays = new ArrayList<>();
-
         for(ForecastDay day: response.getForecast().getForecastday()){
-            String date = day.getDate();
+            LocalDate date = LocalDate.parse(day.getDate(),DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             Double avgTemp = day.getDay().getAvgtemp_c();
             String condition = day.getDay().getCondition().getText();
-            WeatherData temp = new WeatherData(city,condition,avgTemp,LocalDateTime.parse(date));
+            WeatherData temp = new WeatherData(city,condition,avgTemp,date.atStartOfDay());
             pastDays.add(temp);
         }
         return pastDays;

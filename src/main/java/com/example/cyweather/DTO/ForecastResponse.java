@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class ForecastResponse {
     private Forecast forecast;
+    private CityDTO cityDTO;
 }
 

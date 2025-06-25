@@ -15,7 +15,10 @@ public class WeatherData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
+
     private String weathercondition;
     private Double temp;
     private LocalDateTime time;
@@ -23,7 +26,7 @@ public class WeatherData {
     public WeatherData() {
     }
 
-    public WeatherData(String city, String weathercondition, Double temp, LocalDateTime time) {
+    public WeatherData(City city, String weathercondition, Double temp, LocalDateTime time) {
         this.city = city;
         this.weathercondition = weathercondition;
         this.temp = temp;
@@ -38,11 +41,11 @@ public class WeatherData {
         this.id = id;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 

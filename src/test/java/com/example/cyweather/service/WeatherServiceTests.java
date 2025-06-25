@@ -1,6 +1,7 @@
 package com.example.cyweather.service;
 
 import com.example.cyweather.api.WeatherApiClient;
+import com.example.cyweather.domain.City;
 import com.example.cyweather.domain.WeatherData;
 import com.example.cyweather.repository.WeatherDataRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,7 @@ public class WeatherServiceTests {
 
     @Test
     void shouldCallApiAndSave(){
-        String city = "Nicosia";
+        City city = new City(540341L,"Nicosia", "Nicosia", "Cyprus",35.17,33.37);
         WeatherData mockData = new WeatherData(
                 city,
                 "Partly Cloudy",
@@ -38,7 +39,7 @@ public class WeatherServiceTests {
         WeatherData result = weatherService.fetchAndSaveCurrentWeather(city);
 
 
-        assertThat(result.getCity()).isEqualTo("Nicosia");
+        assertThat(result.getCity()).isEqualTo(city);
         verify(weatherApiClient).fetchCurrentWeather(city);
         verify(weatherDataRepository).save(mockData);
     }
