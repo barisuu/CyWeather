@@ -1,7 +1,11 @@
 import {AppBar, Box, Container, MenuItem, Toolbar, Typography} from "@mui/material";
+import SearchBar from "../features/search/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 
 export default function NavBar() {
+    const navigate = useNavigate();
+
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static"
@@ -11,9 +15,16 @@ export default function NavBar() {
                     }}>
                 <Container maxWidth="xl">
                     <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Box>
+                        <Box onClick={() => {
+                            navigate(`/home`);
+                        }}
+                        sx={{'&:hover': {
+                                cursor: 'pointer'
+                            }}}
+                        >
                             <Typography variant="h4" fontWeight="bold">CyWeather</Typography>
                         </Box>
+                        <SearchBar/>
                         <MenuItem>
                             API Call History
                         </MenuItem>

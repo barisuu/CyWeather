@@ -1,7 +1,7 @@
 import {Box, Grid, Stack} from '@mui/material';
 import CityTable from './CityTable';
-import CityDetailCard from './features/cities/details/CityDetailCard';
 import {useCityCurrentWeather} from './hooks/useCityCurrentWeather';
+import CityCard from './CityCard';
 
 
 export default function HomePage() {
@@ -25,9 +25,9 @@ export default function HomePage() {
         >
             <Grid container spacing={4} paddingBottom={"10vh"}>
                 <Grid size={12}>
-                    <Stack direction={"row"} spacing={8}>
+                    <Stack direction={"row"} spacing={8} justifyContent="center">
                         {cardData.map((d) => (
-                                <CityDetailCard city={d.city} current={d.current}/>
+                                <CityCard city={d.city} current={d.current}/>
                             ))}
                     </Stack>
                 </Grid>

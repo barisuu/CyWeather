@@ -17,7 +17,7 @@ export default function CityTable({cityCurrentWeather}: Props) {
         <TableContainer component={Paper} sx={{borderRadius:2, boxShadow:"10px 10px 10px rgba(0,0,0,0.5)"}}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
-                    <TableRow sx={{backgroundColor: 'grey.300'}}>
+                    <TableRow sx={{bgcolor: "#3fd0e8"}}>
                         <TableCell>City</TableCell>
                         <TableCell align="right">Condition</TableCell>
                         <TableCell align="right">Temperature</TableCell>
