@@ -1,44 +1,39 @@
 package com.example.cyweather.domain;
 
 import jakarta.persistence.*;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"city","time"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"city","dateTime"})
 )
-public class WeatherData {
+public abstract class WeatherData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
-    private City city;
+    protected City city;
+    protected String weatherCondition;
+    protected String conditionIconURL;
+    protected LocalDateTime dateTime;
 
-    private String weathercondition;
-    private Double temp;
-    private LocalDateTime time;
-
-    public WeatherData() {
+    public WeatherData(City city, String weatherCondition, String conditionIconURL, LocalDateTime dateTime) {
+        this.city = city;
+        this.weatherCondition = weatherCondition;
+        this.conditionIconURL = conditionIconURL;
+        this.dateTime = dateTime;
     }
 
-    public WeatherData(City city, String weathercondition, Double temp, LocalDateTime time) {
-        this.city = city;
-        this.weathercondition = weathercondition;
-        this.temp = temp;
-        this.time = time;
+    public WeatherData() {
+
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public City getCity() {
@@ -49,37 +44,27 @@ public class WeatherData {
         this.city = city;
     }
 
-    public String getWeathercondition() {
-        return weathercondition;
+    public String getWeatherCondition() {
+        return weatherCondition;
     }
 
-    public void setWeathercondition(String weathercondition) {
-        this.weathercondition = weathercondition;
+    public void setWeatherCondition(String weatherCondition) {
+        this.weatherCondition = weatherCondition;
     }
 
-    public Double getTemp() {
-        return temp;
+    public String getConditionIconURL() {
+        return conditionIconURL;
     }
 
-    public void setTemp(Double temp) {
-        this.temp = temp;
+    public void setConditionIconURL(String conditionIconURL) {
+        this.conditionIconURL = conditionIconURL;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    @Override
-    public String toString() {
-        return "WeatherData{" +
-                "city=" + city +
-                ", weathercondition=" + weathercondition +
-                ", temp='" + temp + '\'' +
-                ", time='" + time + '\'' +
-                '}';
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

@@ -7,14 +7,16 @@ import {
     Divider,
     Typography
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-    cityName: string,
+    city: City,
     condition: string
     temperature: number
 }
 
-export default function CityCard({cityName, condition, temperature}: Props) {
+export default function CityCard({city, condition, temperature}: Props) {
+    const navigate = useNavigate();
     return (
         <Card elevation={3}
               sx={{
@@ -27,11 +29,12 @@ export default function CityCard({cityName, condition, temperature}: Props) {
                       border: "2px solid blue"
                   }
               }}
+              onClick={() => navigate(`/city/${city.id}`)}
         >
             <Box display="flex" alignItems={"center"} justifyContent="space-between">
                 <CardHeader
                     avatar={<Avatar sx={{height: 80, width: 80}}/>}
-                    title={cityName}
+                    title={city.name}
                     slotProps={{
                         title: {
                             fontWeight: "bold",

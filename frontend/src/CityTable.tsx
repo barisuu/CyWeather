@@ -5,24 +5,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useNavigate } from 'react-router-dom';
 
-function createData(
-    name: string,
-    condition: string,
-    temperature: number,
-) {
-    return { name, condition, temperature};
+type Props = {
+    cityCurrentWeather: CityCurrentWeather[]
 }
 
-const rows = [
-    createData('Guzelyurt', "Rainy", 18),
-    createData('Lefke', "Cloudy", 20),
-    createData('Iskele', "Partly Cloudy", 23),
-    createData('Kalkanli', "Rainy", 19),
-    createData('Karpaz', "Sunny", 30),
-];
-
-export default function CityTable() {
+export default function CityTable({cityCurrentWeather}: Props) {
+    const navigate = useNavigate();
     return (
         <TableContainer component={Paper} sx={{borderRadius:2, boxShadow:"10px 10px 10px rgba(0,0,0,0.5)"}}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -34,9 +24,9 @@ export default function CityTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {cityCurrentWeather.map((row) => (
                         <TableRow
-                            key={row.name}
+                            key={row.city.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } ,
                                 backgroundColor: "whitesmoke",
                                 '&:hover': {
@@ -44,12 +34,13 @@ export default function CityTable() {
                                     cursor: 'pointer',
                                 },
                             }}
+                            onClick={() => navigate(`/city/${row.city.id}`)}
                         >
                             <TableCell component="th" scope="row">
-                                {row.name}
+                                {row.city.name}
                             </TableCell>
-                            <TableCell align="right">{row.condition}</TableCell>
-                            <TableCell align="right">{row.temperature}</TableCell>
+                            <TableCell align="right">{row.current.condition.text}</TableCell>
+                            <TableCell align="right">{row.current.temp_c}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

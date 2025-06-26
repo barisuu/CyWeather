@@ -1,9 +1,12 @@
 package com.example.cyweather.controller;
 
-import com.example.cyweather.DTO.CityDTO;
+import com.example.cyweather.DTO.*;
 import com.example.cyweather.api.SearchApiClient;
 import com.example.cyweather.domain.City;
+import com.example.cyweather.domain.CurrentData;
+import com.example.cyweather.domain.ForecastData;
 import com.example.cyweather.domain.WeatherData;
+import com.example.cyweather.mapper.CityMapper;
 import com.example.cyweather.service.CityService;
 import com.example.cyweather.service.WeatherService;
 import org.springframework.http.HttpStatus;
@@ -11,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/weather")
@@ -27,10 +32,10 @@ public class WeatherController {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<WeatherData> getCurrentWeather(@RequestParam Long cityId){
+    public ResponseEntity<CurrentDataDTO> getCurrentWeather(@RequestParam Long cityId){
         try{
             City city = cityService.createOrGetCity(cityId);
-            WeatherData data = weatherService.getCurrentWeather(city);
+            CurrentDataDTO data = weatherService.getCurrentWeather(city);
             return ResponseEntity.ok(data);
         } catch (Exception e){
             //TODO Specific exception handling.
@@ -39,13 +44,13 @@ public class WeatherController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<WeatherData>> getHistoricalWeather(@RequestParam Long cityId, @RequestParam Integer daysInPast){
+    public ResponseEntity<List<ForecastDataDTO>> getHistoricalWeather(@RequestParam Long cityId, @RequestParam Integer daysInPast){
         try{
             if(daysInPast >14){
                 throw new Exception("Days in past can't be larger than 14");
             }
             City city = cityService.createOrGetCity(cityId);
-            List<WeatherData> pastForecastData = weatherService.getHistoricalWeather(city,daysInPast);
+            List<ForecastDataDTO> pastForecastData = weatherService.getHistoricalWeather(city,daysInPast);
             return ResponseEntity.ok(pastForecastData);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -59,9 +64,10 @@ public class WeatherController {
     }
 
     @GetMapping("/cities/{id}")
-    public ResponseEntity<City> searchCity(@PathVariable Long id){
+    public ResponseEntity<CityWeatherDTO> getCityDetails(@PathVariable Long id, @RequestParam Integer daysInPast, @RequestParam Integer daysInFuture){
         City city = cityService.createOrGetCity(id);
-        return ResponseEntity.ok(city);
+        CityWeatherDTO cityWeatherDTO = weatherService.getCityWeatherDetails(city,daysInPast,daysInFuture);
+        return ResponseEntity.ok(cityWeatherDTO);
     }
 
     @PostMapping("/init")
@@ -79,9 +85,22 @@ public class WeatherController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<WeatherData>> getHomePageWeather(){
-        return ResponseEntity.ok(new ArrayList<WeatherData>());
+    @GetMapping("/homepage")
+    public ResponseEntity<List<CityCurrentWeatherDTO>> getHomePageWeather(@RequestParam String ids){
+        try {
+            List<CityCurrentWeatherDTO> currentWeatherList = new ArrayList<>();
+            List<Long> cityIds = Arrays.stream(ids.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            for(Long id:cityIds){
+                City city = cityService.createOrGetCity(id);
+                currentWeatherList.add(weatherService.getCurrentCityWeather(city));
+            }
+            return ResponseEntity.ok(currentWeatherList);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
 }
