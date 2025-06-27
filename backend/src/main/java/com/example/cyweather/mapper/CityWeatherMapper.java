@@ -2,7 +2,6 @@ package com.example.cyweather.mapper;
 
 import com.example.cyweather.DTO.*;
 import com.example.cyweather.domain.City;
-import com.example.cyweather.domain.ForecastData;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +17,7 @@ public class CityWeatherMapper {
         for(ForecastDataDTO data:forecastData){
             if(LocalDateTime.parse(data.getDate()).toLocalDate().isBefore(LocalDate.now())){
                 historical.add(data);
-            }else {
+            }else{
                 forecast.add(data);
             }
         }

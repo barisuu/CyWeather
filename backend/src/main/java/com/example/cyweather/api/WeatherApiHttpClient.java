@@ -64,7 +64,7 @@ public class WeatherApiHttpClient implements WeatherApiClient {
                 .queryParam("key",apiKey)
                 .queryParam("q","id:"+city.getId())
                 .queryParam("dt",dt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .queryParam("end_dt",LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .queryParam("end_dt",LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build()
                 .toUriString();
 
