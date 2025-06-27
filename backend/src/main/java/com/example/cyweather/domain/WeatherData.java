@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"city","dateTime"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"city_id","dateTime"})
 )
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 public abstract class WeatherData {
 
     @Id

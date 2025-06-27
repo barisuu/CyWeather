@@ -16,5 +16,7 @@ public interface WeatherDataRepository extends JpaRepository<WeatherData, Long> 
 
     ArrayList<ForecastData> findByCityAndDateTimeBetween(City city, LocalDateTime dateTimeAfter, LocalDateTime dateTimeBefore);
 
+    Optional<WeatherData> findById(Long id);
+
 }
 

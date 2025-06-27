@@ -25,25 +25,4 @@ public class WeatherServiceTests {
         weatherDataRepository = mock(WeatherDataRepository.class);
         weatherService = new WeatherService(weatherDataRepository,weatherApiClient);
     }
-
-   /*Broken test due to refactoring. @Test
-    void shouldCallApiAndSave(){
-        City city = new City(540341L,"Nicosia", "Nicosia", "Cyprus",35.17,33.37);
-        CurrentData mockData = new CurrentData(
-                city,
-                "Partly Cloudy",
-                "",
-                LocalDateTime.now(),
-                28.5
-        );
-        when(weatherApiClient.fetchCurrentWeather(city)).thenReturn(mockData);
-        when(weatherDataRepository.save(mockData)).thenReturn(mockData);
-
-        CurrentDataDTO result = weatherService.getCurrentWeather(city);
-
-
-        assertThat(result.getCity()).isEqualTo(city);
-        verify(weatherApiClient).fetchCurrentWeather(city);
-        verify(weatherDataRepository).save(mockData);
-    }*/
 }
