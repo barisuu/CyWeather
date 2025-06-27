@@ -34,17 +34,16 @@ public class SearchApiHttpClient implements SearchApiClient{
                 .toUriString();
         CityDTO[] cityDTOSearchResults = restTemplate.getForObject(url, CityDTO[].class);
 
+        assert cityDTOSearchResults != null;
         CityDTO cityDTOInfo = cityDTOSearchResults[0];
 
 
-        City newCity = new City(cityId,
+        return new City(cityId,
                 cityDTOInfo.getName(),
                 cityDTOInfo.getRegion(),
                 cityDTOInfo.getCountry(),
                 cityDTOInfo.getLat(),
                 cityDTOInfo.getLon());
-
-        return newCity;
     }
 
     @Override
@@ -61,7 +60,6 @@ public class SearchApiHttpClient implements SearchApiClient{
         if(cityDTOSearchResultsArray ==null){
                 return Collections.emptyList();
         }
-        List<CityDTO> searchResults = List.of(cityDTOSearchResultsArray);
-        return searchResults;
+        return List.of(cityDTOSearchResultsArray);
     }
 }

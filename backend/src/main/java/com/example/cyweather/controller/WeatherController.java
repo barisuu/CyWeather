@@ -3,10 +3,6 @@ package com.example.cyweather.controller;
 import com.example.cyweather.DTO.*;
 import com.example.cyweather.api.SearchApiClient;
 import com.example.cyweather.domain.City;
-import com.example.cyweather.domain.CurrentData;
-import com.example.cyweather.domain.ForecastData;
-import com.example.cyweather.domain.WeatherData;
-import com.example.cyweather.mapper.CityMapper;
 import com.example.cyweather.service.CityService;
 import com.example.cyweather.service.WeatherService;
 import org.springframework.http.HttpStatus;
@@ -16,21 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/weather")
 public class WeatherController {
     private final WeatherService weatherService;
     private final CityService cityService;
-    private final SearchApiClient searchApiClient;
 
-    public WeatherController(WeatherService weatherService, CityService cityService, SearchApiClient searchApiClient) {
+    public WeatherController(WeatherService weatherService, CityService cityService) {
         this.weatherService = weatherService;
         this.cityService = cityService;
-        this.searchApiClient = searchApiClient;
     }
 
+    //TODO: Cleanup debugging endpoints.
+    /* Deprecated test endpoints not used by the frontend, kept for debugging.
     @GetMapping("/current")
     public ResponseEntity<CurrentDataDTO> getCurrentWeather(@RequestParam Long cityId){
         try{
@@ -38,7 +33,6 @@ public class WeatherController {
             CurrentDataDTO data = weatherService.getCurrentWeather(city);
             return ResponseEntity.ok(data);
         } catch (Exception e){
-            //TODO Specific exception handling.
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -55,7 +49,7 @@ public class WeatherController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
     @GetMapping("/cities/search")
     public ResponseEntity<List<CityDTO>> searchCities(@RequestParam String name){
@@ -79,7 +73,7 @@ public class WeatherController {
         for(String cityName:initialCityNames){
             List<CityDTO> searchResults = cityService.searchCitiesByName(cityName);
             if(!searchResults.isEmpty()){
-                cityService.createOrGetCity(searchResults.get(0).getId());
+                cityService.createOrGetCity(searchResults.getFirst().getId());
             }
         }
         return ResponseEntity.ok().build();
@@ -91,7 +85,7 @@ public class WeatherController {
             List<CityCurrentWeatherDTO> currentWeatherList = new ArrayList<>();
             List<Long> cityIds = Arrays.stream(ids.split(","))
                     .map(Long::parseLong)
-                    .collect(Collectors.toList());
+                    .toList();
             for(Long id:cityIds){
                 City city = cityService.createOrGetCity(id);
                 currentWeatherList.add(weatherService.getCurrentCityWeather(city));

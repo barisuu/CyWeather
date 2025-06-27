@@ -42,6 +42,15 @@ public class WeatherService {
         return CurrentMapper.toEntity(freshData);
     }
 
+    // Currently, if any part of the existing data for Forecast fetching is missing, it fetches
+    // the entire range once again. However, this can be improved by fetching only the missing part.
+    // If API call amount or time to fetch isn't a concern, this can be achieved by fetching individual
+    // missing days. However, a better version would probably be fetching the minimum range required
+    // that would restore missing data. Currently, only missing days are saved anyways so that logic doesn't need
+    // any change.
+
+    //TODO: Cleanup
+    /* Method used by debugging endpoint.
     public List<ForecastDataDTO> getHistoricalWeather(City city, Integer daysInPast){
         LocalDate dtDate = LocalDate.now().minusDays(daysInPast);
 
@@ -64,7 +73,7 @@ public class WeatherService {
             }
         }
         return dtoList;
-    }
+    }*/
 
     public CityWeatherDTO getCityWeatherDetails(City city, Integer daysInPast, Integer daysInFuture){
         LocalDate dtDate = LocalDate.now().minusDays(daysInPast);
@@ -80,7 +89,9 @@ public class WeatherService {
             List<ForecastData> fetchedWeather = weatherApiClient.fetchHistoricalWeather(city,dtDate);
             fetchedWeather.addAll(weatherApiClient.fetchForecastWeather(city,daysInFuture));
             for(ForecastData data:fetchedWeather){
-                weatherDataRepository.save(data);
+                if(!existingData.contains(data)){
+                    weatherDataRepository.save(data);
+                }
                 dtoList.add(ForecastMapper.toEntity(data));
             }
         }else{

@@ -3,6 +3,7 @@ package com.example.cyweather.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class ForecastData extends WeatherData{
@@ -27,27 +28,34 @@ public class ForecastData extends WeatherData{
         this.type = type;
     }
 
-    public Double getAvgTempC() {
-        return avgTempC;
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if (!(o instanceof ForecastData that)) return false;
+
+        return city != null && city.equals(that.city)
+                && dateTime != null && dateTime.equals(that.dateTime)
+                && type == that.type;
     }
 
-    public void setAvgTempC(Double avgTempC) {
-        this.avgTempC = avgTempC;
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                city!=null ? city.getId() : null,
+                dateTime,
+                type
+        );
+    }
+
+    public Double getAvgTempC() {
+        return avgTempC;
     }
 
     public Double getMaxTempC() {
         return maxTempC;
     }
 
-    public void setMaxTempC(Double maxTempC) {
-        this.maxTempC = maxTempC;
-    }
-
     public Double getMinTempC() {
         return minTempC;
-    }
-
-    public void setMinTempC(Double minTempC) {
-        this.minTempC = minTempC;
     }
 }
