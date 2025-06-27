@@ -1,7 +1,6 @@
 package com.example.cyweather.controller;
 
 import com.example.cyweather.DTO.*;
-import com.example.cyweather.api.SearchApiClient;
 import com.example.cyweather.domain.City;
 import com.example.cyweather.service.CityService;
 import com.example.cyweather.service.WeatherService;
