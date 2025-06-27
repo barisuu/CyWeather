@@ -1,6 +1,6 @@
 # CyWeather Application
 ## Overview
-A full-stack weather application built with Spring Boot (backend), React (frontend), and PostgreSQL database, dockerized with Docker Compose for easy setup and deployment.
+A full-stack weather application built with Spring Boot (backend), React (frontend), and PostgreSQL database, dockerized with Docker Compose for easy setup and deployment. **Init page is included for case requirements, application doesn't require init page to run.**
 
 ## Features
 
