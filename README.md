@@ -74,7 +74,7 @@ You can run backend unit and integration tests locally:
 
   Make sure Docker daemon is running
 
-  Ports 80 (frontend) and 8080 (backend) must be free on your machine
+  Ports used for frontend and backend must be free on your machine
 
   Check logs for backend or frontend if something is not working:
   ```sh
