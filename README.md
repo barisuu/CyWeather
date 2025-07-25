@@ -28,11 +28,12 @@ A full-stack weather application built with Spring Boot (backend), React (fronte
   cd cyweather
   ```
 2. Insert your API key
+
    Open docker-compose.yml and type your api key in the WEATHERAPI_KEY parameter.
 
    If you don't have an API key, you can get one from https://www.weatherapi.com/
    
-3. Build and start the application with Docker Compose
+4. Build and start the application with Docker Compose
 
 This command will:
 
